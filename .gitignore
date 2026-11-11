@@ -1,0 +1,15 @@
+   # MATLAB
+   *.asv
+   *.mat
+   *.slxc
+   slprj/
+
+   # Octave
+   octave-workspace
+
+   # Python
+   __pycache__/
+
+   # OS files
+   .DS_Store
+   Thumbs.db
