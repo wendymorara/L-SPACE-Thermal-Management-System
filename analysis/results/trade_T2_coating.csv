@@ -1,0 +1,4 @@
+coating,alpha,epsilon,mission_kWh_hot,mission_kWh_cold,scan_Tmax_hot_K
+"White paint",0.15,0.88,11.3003,18.192,301.13
+"Black AZ-1000-ECB (2023)",0.97,0.89,2.5905,15.8565,301.13
+"Low-e (VDA tape)",0.12,0.04,2.559,16.4947,301.13

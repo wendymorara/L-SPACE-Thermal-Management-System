@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 830" role="img" aria-label="Thermal architecture of the L'SPACE Warm Electronics Box: a black-coated aluminium skin over 75 mm of aerogel encloses the payload, PCM, battery and avionics. In cold standby the box absorbs 90 W of sunlight and loses 64 W by radiation and 33 W by convection, while 7 W leaks out through the aerogel and 1 W through the standoffs, replaced by 7 W of heater power and 1 W of electronics heat. Heaters are powered from the solar array through an over-temperature cutoff and switched by software or survival thermostats. Modes: standby, warm-up, science, survival, safe hold." font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="hin" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9480f"/></marker>
+    <marker id="hout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1c6dd0"/></marker>
+    <marker id="pwr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2b8a3e"/></marker>
+    <marker id="sig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker>
+    <marker id="st" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#222"/></marker>
+  </defs>
+
+  <rect width="1200" height="830" fill="#ffffff"/>
+
+  <!-- title -->
+  <text x="30" y="34" font-size="18" font-weight="bold" fill="#111">Warm Electronics Box: thermal architecture and heat flows</text>
+  <text x="30" y="56" font-size="12.5" fill="#555">Heat-flow values are sol-mean, cold standby case (from analysis/results/energy_budget.csv)</text>
+
+  <!-- legend -->
+  <g font-size="12" fill="#333">
+    <line x1="760" y1="30" x2="800" y2="30" stroke="#d9480f" stroke-width="3" marker-end="url(#hin)"/><text x="808" y="34">heat in</text>
+    <line x1="870" y1="30" x2="910" y2="30" stroke="#1c6dd0" stroke-width="3" marker-end="url(#hout)"/><text x="918" y="34">heat out</text>
+    <line x1="990" y1="30" x2="1030" y2="30" stroke="#2b8a3e" stroke-width="3" marker-end="url(#pwr)"/><text x="1038" y="34">electrical power</text>
+    <line x1="760" y1="54" x2="800" y2="54" stroke="#555" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#sig)"/><text x="808" y="58">signal / command</text>
+  </g>
+
+  <!-- ===== environment ===== -->
+  <circle cx="92" cy="128" r="26" fill="#f5a524"/>
+  <text x="92" y="174" font-size="12.5" text-anchor="middle" fill="#333">Sun, 15–30° up</text>
+  <text x="92" y="190" font-size="12.5" text-anchor="middle" fill="#333">(never sets)</text>
+  <line x1="122" y1="140" x2="326" y2="196" stroke="#d9480f" stroke-width="4" marker-end="url(#hin)"/>
+  <text x="150" y="104" font-size="13" font-weight="bold" fill="#d9480f">solar absorbed 90 W</text>
+  <text x="150" y="120" font-size="11.5" fill="#666">beam + diffuse + ice albedo</text>
+
+  <text x="520" y="84" font-size="12.5" text-anchor="middle" fill="#333">Sky (IR sink, colder than air)</text>
+  <line x1="520" y1="146" x2="520" y2="96" stroke="#1c6dd0" stroke-width="4" marker-end="url(#hout)"/>
+  <text x="534" y="128" font-size="13" font-weight="bold" fill="#1c6dd0">IR to sky + ground 64 W</text>
+
+  <line x1="326" y1="330" x2="190" y2="330" stroke="#1c6dd0" stroke-width="4" marker-end="url(#hout)"/>
+  <text x="182" y="308" font-size="13" font-weight="bold" fill="#1c6dd0" text-anchor="end">convection 33 W</text>
+  <text x="40" y="360" font-size="12.5" fill="#333">CO₂ air, 5–8 torr</text>
+  <text x="40" y="376" font-size="12.5" fill="#333">184–253 K design</text>
+  <text x="40" y="392" font-size="12.5" fill="#333">wind: h = 0.4–4 W/m²K</text>
+
+  <!-- ===== WEB cross-section ===== -->
+  <!-- coating + skin -->
+  <rect x="330" y="150" width="500" height="370" fill="#fbe8b5" stroke="#111" stroke-width="7"/>
+  <!-- interior -->
+  <rect x="376" y="196" width="408" height="278" fill="#ffffff" stroke="#888" stroke-width="1.5"/>
+  <text x="580" y="178" font-size="12" text-anchor="middle" fill="#6b5500">75 mm silica aerogel · G = 0.135 W/K</text>
+  <text x="840" y="160" font-size="11.5" fill="#333">black coating</text>
+  <text x="840" y="174" font-size="11.5" fill="#333">α 0.97 / ε 0.89</text>
+  <text x="840" y="188" font-size="11.5" fill="#333">on 0.5 mm Al skin</text>
+
+  <!-- aerogel conduction out -->
+  <line x1="740" y1="200" x2="740" y2="140" stroke="#1c6dd0" stroke-width="3" marker-end="url(#hout)"/>
+  <text x="748" y="134" font-size="12.5" font-weight="bold" fill="#1c6dd0">7 W through aerogel</text>
+
+  <!-- payload zone -->
+  <rect x="396" y="212" width="210" height="136" fill="#eef3f8" stroke="#555"/>
+  <text x="501" y="238" font-size="13" font-weight="bold" text-anchor="middle" fill="#111">Payload zone</text>
+  <text x="501" y="256" font-size="12" text-anchor="middle" fill="#333">MSolo + neutron spectrometer</text>
+  <text x="501" y="274" font-size="12" text-anchor="middle" fill="#333">293–303 K during scans</text>
+  <text x="501" y="292" font-size="12" text-anchor="middle" fill="#333">38 W while scanning</text>
+  <circle cx="586" cy="330" r="5" fill="#555"/><text x="574" y="334" font-size="10.5" text-anchor="end" fill="#555">RTD ×2</text>
+  <!-- payload plate + heater -->
+  <rect x="396" y="350" width="210" height="10" fill="#9aa0a6"/>
+  <polyline points="404,370 414,362 424,378 434,362 444,378 454,362 464,378 474,362 484,378 494,362 504,378 514,362 524,378 534,362 544,378 554,362 564,378 574,362 584,378 594,362 600,370" fill="none" stroke="#c92a2a" stroke-width="2"/>
+  <text x="501" y="394" font-size="11.5" text-anchor="middle" fill="#c92a2a">payload heaters: 20 W, strings H1 + H2</text>
+  <!-- PCM -->
+  <rect x="396" y="404" width="210" height="52" fill="#d3f9d8" stroke="#2b8a3e"/>
+  <text x="501" y="426" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#1b5e2a">PCM module</text>
+  <text x="501" y="444" font-size="11.5" text-anchor="middle" fill="#1b5e2a">1.0 kg n-octadecane, melts 301 K</text>
+
+  <!-- battery zone -->
+  <rect x="626" y="212" width="142" height="100" fill="#f1f3f5" stroke="#555"/>
+  <text x="697" y="238" font-size="13" font-weight="bold" text-anchor="middle" fill="#111">Li-ion battery</text>
+  <text x="697" y="256" font-size="12" text-anchor="middle" fill="#333">≥ 263 K always</text>
+  <circle cx="752" cy="296" r="5" fill="#555"/><text x="740" y="300" font-size="10.5" text-anchor="end" fill="#555">RTD ×2</text>
+  <polyline points="634,322 644,316 654,328 664,316 674,328 684,316 694,328 704,316 714,328 724,316 734,328 744,316 754,328 760,322" fill="none" stroke="#c92a2a" stroke-width="2"/>
+  <text x="697" y="344" font-size="11.5" text-anchor="middle" fill="#c92a2a">battery heaters: 10 W</text>
+
+  <!-- avionics -->
+  <rect x="626" y="370" width="142" height="86" fill="#f1f3f5" stroke="#555"/>
+  <text x="697" y="396" font-size="13" font-weight="bold" text-anchor="middle" fill="#111">Avionics</text>
+  <text x="697" y="414" font-size="12" text-anchor="middle" fill="#333">C&amp;DH runs the</text>
+  <text x="697" y="430" font-size="12" text-anchor="middle" fill="#333">thermal control</text>
+  <text x="697" y="446" font-size="12" text-anchor="middle" fill="#333">software</text>
+
+  <!-- interior balance note -->
+  <text x="580" y="490" font-size="11.5" text-anchor="middle" fill="#333">in: heaters 7.2 W + electronics 1.0 W  =  out: 7.0 W aerogel + 1.1 W leaks</text>
+
+  <!-- standoffs + chassis -->
+  <rect x="380" y="524" width="12" height="36" fill="#868e96"/>
+  <rect x="500" y="524" width="12" height="36" fill="#868e96"/>
+  <rect x="648" y="524" width="12" height="36" fill="#868e96"/>
+  <rect x="768" y="524" width="12" height="36" fill="#868e96"/>
+  <rect x="310" y="560" width="540" height="16" fill="#adb5bd"/>
+  <text x="580" y="596" font-size="12" text-anchor="middle" fill="#333">rover chassis (at air temperature) · 4 G-10 standoffs</text>
+  <line x1="720" y1="524" x2="720" y2="556" stroke="#1c6dd0" stroke-width="3" marker-end="url(#hout)"/>
+  <text x="792" y="546" font-size="12" font-weight="bold" fill="#1c6dd0">leaks 1.1 W (0.019 W/K)</text>
+  <rect x="0" y="606" width="1200" height="10" fill="#e9ecef"/>
+  <text x="40" y="600" font-size="12" fill="#666">polar ice</text>
+
+  <!-- ===== power + control chain ===== -->
+  <rect x="930" y="96" width="240" height="56" rx="4" fill="#ebfbee" stroke="#2b8a3e"/>
+  <text x="1050" y="120" font-size="13" font-weight="bold" text-anchor="middle" fill="#1b5e2a">Solar array</text>
+  <text x="1050" y="138" font-size="11.5" text-anchor="middle" fill="#333">2 × 0.64 m², ~650 Wh/sol cold</text>
+  <line x1="1050" y1="152" x2="1050" y2="190" stroke="#2b8a3e" stroke-width="3" marker-end="url(#pwr)"/>
+
+  <rect x="930" y="192" width="240" height="56" rx="4" fill="#ebfbee" stroke="#2b8a3e"/>
+  <text x="1050" y="216" font-size="13" font-weight="bold" text-anchor="middle" fill="#1b5e2a">EPS heater bus</text>
+  <text x="1050" y="234" font-size="11.5" text-anchor="middle" fill="#333">battery (inside WEB) buffers</text>
+  <line x1="1050" y1="248" x2="1050" y2="286" stroke="#2b8a3e" stroke-width="3" marker-end="url(#pwr)"/>
+  <!-- bus to battery inside WEB -->
+  <line x1="930" y1="230" x2="772" y2="262" stroke="#2b8a3e" stroke-width="2.5" marker-end="url(#pwr)"/>
+  <text x="852" y="236" font-size="11" fill="#2b8a3e" text-anchor="middle">charge</text>
+
+  <rect x="930" y="288" width="240" height="56" rx="4" fill="#fff4e6" stroke="#d9480f"/>
+  <text x="1050" y="312" font-size="13" font-weight="bold" text-anchor="middle" fill="#a63c06">Over-temperature cutoff</text>
+  <text x="1050" y="330" font-size="11.5" text-anchor="middle" fill="#333">in series, opens at 308 K</text>
+  <line x1="1050" y1="344" x2="1050" y2="382" stroke="#2b8a3e" stroke-width="3" marker-end="url(#pwr)"/>
+
+  <rect x="930" y="384" width="100" height="74" rx="4" fill="#f8f9fa" stroke="#555"/>
+  <text x="980" y="406" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">Software</text>
+  <text x="980" y="422" font-size="11" text-anchor="middle" fill="#333">set point</text>
+  <text x="980" y="437" font-size="11" text-anchor="middle" fill="#333">by mode</text>
+  <text x="1050" y="426" font-size="11" font-weight="bold" text-anchor="middle" fill="#555">OR</text>
+  <rect x="1070" y="384" width="100" height="74" rx="4" fill="#f8f9fa" stroke="#555"/>
+  <text x="1120" y="406" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">Thermostats</text>
+  <text x="1120" y="422" font-size="11" text-anchor="middle" fill="#333">265 / 267 K</text>
+  <text x="1120" y="437" font-size="11" text-anchor="middle" fill="#333">work if SW off</text>
+
+  <!-- switched power into heaters -->
+  <polyline points="1050,458 1050,490 880,490 880,361 604,361" fill="none" stroke="#2b8a3e" stroke-width="3" marker-end="url(#pwr)"/>
+  <text x="975" y="508" font-size="11.5" text-anchor="middle" fill="#2b8a3e">to heater strings H1 / H2 · 30 W each, redundant</text>
+  <!-- commands -->
+  <line x1="768" y1="412" x2="926" y2="412" stroke="#555" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#sig)"/>
+  <text x="905" y="404" font-size="10.5" text-anchor="middle" fill="#555">cmd</text>
+  <line x1="590" y1="330" x2="620" y2="430" stroke="#555" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#sig)"/>
+
+  <!-- ===== mode switching ===== -->
+  <line x1="30" y1="636" x2="1170" y2="636" stroke="#dee2e6"/>
+  <text x="30" y="662" font-size="15" font-weight="bold" fill="#111">Mode switching</text>
+  <text x="168" y="662" font-size="12" fill="#555">Polar summer has no night, so modes follow the science schedule and faults rather than day/night.</text>
+
+  <g font-size="12" text-anchor="middle">
+    <rect x="30" y="682" width="190" height="66" rx="6" fill="#f1f3f5" stroke="#333"/>
+    <text x="125" y="704" font-weight="bold" fill="#111">Standby</text>
+    <text x="125" y="721" fill="#333">hold 265–267 K</text>
+    <text x="125" y="737" fill="#333">72 of 90 sols</text>
+
+    <rect x="270" y="682" width="190" height="66" rx="6" fill="#fff4e6" stroke="#333"/>
+    <text x="365" y="704" font-weight="bold" fill="#111">Warm-up</text>
+    <text x="365" y="721" fill="#333">6 h before scan</text>
+    <text x="365" y="737" fill="#333">heaters up to 30 W</text>
+
+    <rect x="510" y="682" width="190" height="66" rx="6" fill="#e7f5ff" stroke="#333"/>
+    <text x="605" y="704" font-weight="bold" fill="#111">Science scan</text>
+    <text x="605" y="721" fill="#333">hold 295–297 K, 38 W load</text>
+    <text x="605" y="737" fill="#333">PCM caps at 301 K</text>
+
+    <rect x="790" y="682" width="170" height="66" rx="6" fill="#f8f0fc" stroke="#333"/>
+    <text x="875" y="704" font-weight="bold" fill="#111">Survival</text>
+    <text x="875" y="721" fill="#333">dust storm</text>
+    <text x="875" y="737" fill="#333">265–267 K, min loads</text>
+
+    <rect x="1000" y="682" width="170" height="66" rx="6" fill="#fff5f5" stroke="#333"/>
+    <text x="1085" y="704" font-weight="bold" fill="#111">Safe hold</text>
+    <text x="1085" y="721" fill="#333">software off</text>
+    <text x="1085" y="737" fill="#333">thermostats only</text>
+  </g>
+  <line x1="220" y1="715" x2="266" y2="715" stroke="#222" stroke-width="1.8" marker-end="url(#st)"/>
+  <line x1="460" y1="715" x2="506" y2="715" stroke="#222" stroke-width="1.8" marker-end="url(#st)"/>
+  <path d="M605,748 L605,778 L125,778 L125,752" fill="none" stroke="#222" stroke-width="1.8" marker-end="url(#st)"/>
+  <text x="365" y="794" font-size="11.5" text-anchor="middle" fill="#333">scan complete</text>
+  <text x="243" y="708" font-size="10.5" text-anchor="middle" fill="#555">cmd</text>
+  <text x="483" y="708" font-size="10.5" text-anchor="middle" fill="#555">start</text>
+  <path d="M700,700 L786,700" fill="none" stroke="#222" stroke-width="1.8" marker-end="url(#st)"/>
+  <text x="743" y="692" font-size="10.5" text-anchor="middle" fill="#555">storm (any mode)</text>
+  <path d="M875,748 L875,812 L60,812 L60,752" fill="none" stroke="#222" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#st)"/>
+  <text x="470" y="826" font-size="11.5" text-anchor="middle" fill="#333">storm cleared → standby</text>
+  <path d="M960,730 L996,730" fill="none" stroke="#222" stroke-width="1.8" marker-end="url(#st)"/>
+  <text x="978" y="764" font-size="10.5" text-anchor="middle" fill="#555">SW fault (any mode)</text>
+</svg>

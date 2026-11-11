@@ -1,0 +1,7 @@
+id,scenario,metric,result,criterion,verdict
+"F1","One heater string lost, other at min bus voltage (24.3 W), cold science sol","Scan-window payload temperature [K]","295.6-301.1","293.15-303.15","PASS"
+"F2","All heater power lost during cold standby (cold soak)","Time from 267 K to battery limit 253 K [h]","4.9","sets the fault-response time","n/a"
+"F2b","All heater power lost: long-term settling temperature","Sol-mean interior temperature after 3 sols [K]","220","information only","n/a"
+"F3","Dust storm with heater power limited to 10 W","Minimum interior temperature [K] (duty cycle)","263.7 (77 %)",">= 263.15 (TCS-02 survival limit)","PASS"
+"F4","Heater stuck ON in hot standby, no cutoff","Peak interior temperature [K]","423.1","information only","n/a"
+"F4","Heater stuck ON in hot standby, 308 K cutoff","Peak interior temperature [K]","308.2","<= 313.15 (payload non-operating max, assumed)","PASS"

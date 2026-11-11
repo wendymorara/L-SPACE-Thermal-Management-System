@@ -1,0 +1,10 @@
+id,case,Tmin_K,Tmax_K,scan_Tmin_K,scan_Tmax_K,heater_Wh_per_sol,heater_duty,pcm_melt_max,array_Wh_per_sol
+"hot_sci_B","Hot, science sol, concept B",285.067,301.13,295.342,301.13,54.4167,0.0735567,0.745798,1182.48
+"hot_std_B","Hot, standby sol, concept B",265.148,270.827,NaN,NaN,22.375,0.030245,0,1182.48
+"cold_sci_B","Cold, science sol, concept B",265.144,301.13,296.49,301.13,175.917,0.237792,0.62788,650.296
+"cold_std_B","Cold, standby sol, concept B",265.142,267.171,NaN,NaN,176.25,0.238243,0,650.296
+"hot_sci_A","Hot, science sol, concept A",295.145,301.13,295.368,301.13,62.7083,0.0847649,0.814767,1182.48
+"hot_std_A","Hot, standby sol, concept A",295.144,297.171,295.145,297.169,127,0.17167,0,1182.48
+"cold_sci_A","Cold, science sol, concept A",295.137,301.13,295.139,301.13,218.708,0.295635,0.593854,650.296
+"cold_std_A","Cold, standby sol, concept A",295.138,297.168,295.139,297.166,287.917,0.389186,0,650.296
+"storm_surv","Dust storm, survival",265.141,267.169,NaN,NaN,194.958,0.263531,0,319.803

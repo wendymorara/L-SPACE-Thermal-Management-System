@@ -1,0 +1,365 @@
+<title>Mars Polar Rover Thermal Design</title>
+<meta name="description" content="Thermal systems engineering case study: closing the energy balance on a Mars polar rover with requirements, SysML v2, a verified MATLAB model, trade studies and failure analysis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 68ch reading column with wide breakouts for figures and tables; a Kelvin ruler is the page's signature device. */
+:root {
+  --bg: #f3f6f8;
+  --surface: #ffffff;
+  --ink: #13202b;
+  --ink-2: #4a5a67;
+  --rule: #d5dde3;
+  --heat: #c2410c;
+  --cold: #1d5fb8;
+  --ok: #2b7a3d;
+  --band: #fde4cf;
+  --surv: #dbe8f8;
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171e; --surface: #16212b; --ink: #e6edf2; --ink-2: #9fb0bd; --rule: #2a3a47;
+    --heat: #f08a4b; --cold: #6aa6f0; --ok: #6cc583; --band: #4a2a17; --surv: #1c3350;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f171e; --surface: #16212b; --ink: #e6edf2; --ink-2: #9fb0bd; --rule: #2a3a47;
+  --heat: #f08a4b; --cold: #6aa6f0; --ok: #6cc583; --band: #4a2a17; --surv: #1c3350;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 17px; line-height: 1.6;
+}
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.col { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.12; margin: 0; }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.3rem); font-weight: 750; font-stretch: 85%; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 700; margin-top: 8px; }
+p { margin: 0; }
+a { color: var(--cold); }
+a:focus-visible { outline: 2px solid var(--cold); outline-offset: 2px; }
+.eyebrow {
+  font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.heat { color: var(--heat); } .cold { color: var(--cold); } .ok { color: var(--ok); }
+
+/* ---- hero ---- */
+header.hero { display: grid; gap: 20px; padding-block: 56px 36px; }
+.hero h1 {
+  font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; font-stretch: 75%;
+  letter-spacing: -0.02em;
+}
+.hero h1 .from { color: var(--heat); }
+.hero h1 .to { color: var(--cold); }
+.hero .lede { font-size: 1.15rem; color: var(--ink-2); max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.9rem; color: var(--ink-2); }
+.meta b { color: var(--ink); font-weight: 600; }
+
+/* ---- kelvin ruler ---- */
+.ruler { margin-top: 8px; }
+.ruler-scroll { overflow-x: auto; }
+.ruler svg { width: 100%; min-width: 620px; height: auto; display: block; }
+.ruler .lbl { font-family: var(--f-mono); font-size: 11px; fill: var(--ink-2); }
+.ruler .lbl-b { font-family: var(--f-body); font-size: 12px; font-weight: 600; fill: var(--ink); }
+.ruler .axis { stroke: var(--ink-2); }
+.ruler .tick { stroke: var(--ink-2); }
+.ruler .air { fill: var(--rule); }
+.ruler .surv { fill: var(--cold); }
+.ruler .op { fill: var(--heat); }
+.ruler-cap { font-size: 0.85rem; color: var(--ink-2); margin-top: 6px; }
+
+/* ---- sections ---- */
+section { display: grid; gap: 18px; padding-block: 44px; border-top: 1px solid var(--rule); }
+.step { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.step .n { font-family: var(--f-mono); color: var(--ink-2); font-size: 0.95rem; }
+.lead { font-size: 1.08rem; }
+
+/* key numbers */
+.keys { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.key { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 4px; align-content: start; }
+.key .v { font-family: var(--f-display); font-stretch: 80%; font-weight: 750; font-size: 2rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.key .k { font-size: 0.9rem; color: var(--ink-2); }
+
+/* figures */
+figure { margin: 0; display: grid; gap: 8px; }
+figure img { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--rule); background: #ffffff; }
+figcaption { font-size: 0.9rem; color: var(--ink-2); max-width: 75ch; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+/* tables */
+.tbl { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); font-weight: 500; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.mono { white-space: nowrap; }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-family: var(--f-mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.closed { color: var(--ok); } .pill.open { color: var(--ink-2); } .pill.fix { color: var(--heat); }
+
+/* trades */
+.trades { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.trade { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.trade .pick { font-weight: 600; }
+.trade p { font-size: 0.92rem; color: var(--ink-2); }
+
+/* risk matrix */
+.risk { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.matrix { display: grid; grid-template-columns: 28px repeat(5, 1fr); grid-template-rows: repeat(5, 54px) 26px; gap: 3px; font-family: var(--f-mono); font-size: 0.75rem; }
+.matrix .c { border-radius: 3px; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 3px; padding: 2px; }
+.matrix .lo { background: var(--surv); } .matrix .md { background: var(--band); } .matrix .hi { background: var(--heat); color: var(--surface); }
+.matrix .ax { color: var(--ink-2); display: flex; align-items: center; justify-content: center; }
+.matrix b { font-weight: 600; }
+.mx-cap { font-size: 0.82rem; color: var(--ink-2); margin-top: 6px; }
+ol.lessons { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; }
+ol.lessons li::marker { font-family: var(--f-mono); color: var(--ink-2); }
+
+footer { border-top: 1px solid var(--rule); padding-top: 28px; display: grid; gap: 8px; font-size: 0.9rem; color: var(--ink-2); }
+
+@media (max-width: 720px) {
+  .risk { grid-template-columns: 1fr; }
+  body { font-size: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 .to { transition: color .3s; }
+}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Thermal systems engineering · Mars polar rover · 2023 → 2026</div>
+  <h1><span class="from">275 W</span> to <span class="to">12 W</span>: keeping a Mars rover warm on the polar ice</h1>
+  <p class="lede">In 2023 I designed the thermal subsystem for a student Mars rover concept, and its energy balance never closed. Holding the payload at 295 K in the cold case took 275 W of heat; the redesign needs 12 W. This is the revision: requirements, a verified thermal model, trade studies, failure analysis and a SysML v2 model, ending in a design whose numbers add up.</p>
+  <div class="meta">
+    <span><b>Role</b> Thermal subsystem lead</span>
+    <span><b>Origin</b> L'SPACE NASA Mission Concept Academy, Team 20</span>
+    <span><b>Tools</b> MATLAB · SysML v2 · Simulink</span>
+  </div>
+
+  <div class="ruler" aria-label="Temperature scale in kelvin: design air temperature 184 to 253 K, survival limit 263 K, payload operating band 293 to 303 K.">
+    <div class="ruler-scroll"><svg viewBox="0 0 1000 96" role="img" aria-label="Kelvin ruler from 170 to 320 K showing design air temperatures 184–253 K, the 263 K survival limit and the 293–303 K payload band.">
+      <rect class="air" x="93" y="30" width="460" height="18" rx="2"/>
+      <rect class="surv" x="619" y="22" width="4" height="34"/>
+      <rect class="op" x="819" y="30" width="67" height="18" rx="2"/>
+      <line class="axis" x1="0" y1="62" x2="1000" y2="62" stroke-width="1"/>
+      <g class="lbl" text-anchor="middle">
+        <line class="tick" x1="0" y1="62" x2="0" y2="68"/><text x="0" y="82" text-anchor="start">170 K</text>
+        <line class="tick" x1="200" y1="62" x2="200" y2="68"/><text x="200" y="82">200</text>
+        <line class="tick" x1="400" y1="62" x2="400" y2="68"/><text x="400" y="82">230</text>
+        <line class="tick" x1="600" y1="62" x2="600" y2="68"/><text x="600" y="82">260</text>
+        <line class="tick" x1="800" y1="62" x2="800" y2="68"/><text x="800" y="82">290</text>
+        <line class="tick" x1="1000" y1="62" x2="1000" y2="68"/><text x="985" y="82">320</text>
+      </g>
+      <text class="lbl-b" x="93" y="20">Mars air, design range 184–253 K</text>
+      <text class="lbl-b" x="621" y="14" text-anchor="middle">survival ≥ 263 K</text>
+      <text class="lbl-b" x="852" y="20" text-anchor="middle">payload 293–303 K</text>
+    </svg></div>
+    <p class="ruler-cap">The whole problem on one scale: the payload must sit 40–120 K above the air around it, on a solar-powered rover.</p>
+  </div>
+</header>
+
+<section>
+  <div class="step"><span class="n">01</span><h2>Mission and requirements</h2></div>
+  <div class="col lead"><p>The rover crosses the north polar ice for 90 sols in northern summer, carrying a mass spectrometer (35 W while scanning) and a neutron spectrometer. In polar summer the sun never sets; it circles 15–30° above the horizon. So the hard cases are a dusty cold sky and a power fault, not a night.</p></div>
+  <div class="keys">
+    <div class="key"><span class="v mono">85° N</span><span class="k">polar layered deposits, Ls 90°–125°</span></div>
+    <div class="key"><span class="v mono">184–253 K</span><span class="k">design air, from Phoenix lander data ±10 K</span></div>
+    <div class="key"><span class="v mono">5–8 torr</span><span class="k">CO₂ atmosphere: convection is real, MLI degrades</span></div>
+    <div class="key"><span class="v mono">18 / 90</span><span class="k">sols with science scans (PDR calendar)</span></div>
+  </div>
+  <div class="col"><p>I rewrote the four vague 2023 requirements into twelve traceable ones. Each has a parent, the component it is allocated to, a verification method and a pass criterion. Two of the twelve came out of the failure analysis in step 06.</p></div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>ID</th><th>Requirement (shall)</th><th>Allocated to</th><th>Method</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">TCS-01</td><td>Payload 293.15–303.15 K from scan start to scan end</td><td>Heaters, PCM, software</td><td>Analysis</td><td><span class="pill closed">closed · 295.3–301.1 K</span></td></tr>
+        <tr><td class="mono">TCS-02</td><td>Interior ≥ 263.15 K always, including with software off</td><td>Thermostats, aerogel</td><td>Test</td><td><span class="pill open">test proposed</span></td></tr>
+        <tr><td class="mono">TCS-04</td><td>Heater energy ≤ 200 Wh/sol cold, ≤ 250 Wh/sol storm</td><td>Aerogel, coating, ops</td><td>Analysis</td><td><span class="pill closed">closed · 176 / 195 Wh</span></td></tr>
+        <tr><td class="mono">TCS-05</td><td>Worst-case heater duty ≤ 70 % at minimum bus voltage</td><td>Heater strings</td><td>Analysis</td><td><span class="pill closed">closed · 17.0 ≥ 16.4 W</span></td></tr>
+        <tr><td class="mono">TCS-08</td><td>Payload ≤ 303.15 K through a 2 h, 38 W scan</td><td>PCM</td><td>Analysis</td><td><span class="pill closed">closed · 301.1 K</span></td></tr>
+        <tr><td class="mono">TCS-10</td><td>≥ 12 h survival with no solar input</td><td>Aerogel, battery</td><td>Analysis</td><td><span class="pill closed">closed · 16.8 h</span></td></tr>
+        <tr><td class="mono">TCS-11</td><td>One heater stuck ON: interior ≤ 313.15 K</td><td>Over-temp cutoff</td><td>Analysis + test</td><td><span class="pill fix">new · 308.2 K</span></td></tr>
+        <tr><td class="mono">TCS-12</td><td>Detect a failed string and switch within 4 h</td><td>Software, RTDs</td><td>Demonstration</td><td><span class="pill fix">new · open</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="mx-cap">8 of 12 shown; the full matrix with parents and success criteria is in the design document.</p>
+</section>
+
+<section>
+  <div class="step"><span class="n">02</span><h2>A thermal model that closes</h2></div>
+  <div class="col lead"><p>The 2023 analysis treated the Martian sky as 3 K deep space, hit a 1 m² face with full sunlight at a 25° sun, mixed up its units and signs, and ended with a net balance of −1,080 W. I rebuilt it from radiation, convection, conduction and internal loads, holding the payload at 295 K and solving for what the heaters must supply.</p></div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Design</th><th>Case</th><th class="num">Insulation G</th><th class="num">Heat loss</th><th class="num">Heater, worst</th></tr></thead>
+      <tbody>
+        <tr><td>2023 polycarbonate shell</td><td>cold</td><td class="num">7.56 W/K</td><td class="num">275.9 W</td><td class="num heat">365.6 W</td></tr>
+        <tr><td>2023 polycarbonate shell</td><td>hot</td><td class="num">7.56 W/K</td><td class="num">95.4 W</td><td class="num">201.6 W</td></tr>
+        <tr><td>2026 aerogel box, 75 mm</td><td>cold</td><td class="num">0.135 W/K</td><td class="num">12.5 W</td><td class="num cold">16.4 W</td></tr>
+        <tr><td>2026 aerogel box, 75 mm</td><td>hot</td><td class="num">0.135 W/K</td><td class="num">6.0 W</td><td class="num">13.8 W</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col"><p>Heater sizing follows from the worst row: 16.4 W ÷ (0.70 maximum duty × 0.81 power at 90 % bus voltage) = 28.8 W, so each heater string is 30 W.</p></div>
+  <h3>Energy balance per operating mode (cold case, watts)</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Mode</th><th class="num">Electronics</th><th class="num">Heater</th><th class="num">Solar in</th><th class="num">IR out</th><th class="num">Convection</th><th class="num">Leaks</th><th class="num">Stored</th></tr></thead>
+      <tbody>
+        <tr><td>Standby</td><td class="num">1.0</td><td class="num">7.1</td><td class="num heat">90.2</td><td class="num cold">64.1</td><td class="num cold">33.1</td><td class="num cold">1.1</td><td class="num">0.1</td></tr>
+        <tr><td>Warm-up (6 h)</td><td class="num">1.0</td><td class="num">24.6</td><td class="num heat">114.2</td><td class="num cold">79.2</td><td class="num cold">40.5</td><td class="num cold">1.2</td><td class="num">18.8</td></tr>
+        <tr><td>Science scan (2 h)</td><td class="num">38.0</td><td class="num">0.0</td><td class="num heat">119.3</td><td class="num cold">91.4</td><td class="num cold">36.2</td><td class="num cold">1.3</td><td class="num">28.4</td></tr>
+        <tr><td>Survival (dust storm)</td><td class="num">1.0</td><td class="num">7.9</td><td class="num heat">43.1</td><td class="num cold">48.5</td><td class="num cold">2.3</td><td class="num cold">1.1</td><td class="num">0.1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="mx-cap">Each row balances to 0.000 W. The skin trades ~100 W with Mars, but only a few watts cross the aerogel; that is all the heaters pay for.</p>
+</section>
+
+<section>
+  <div class="step"><span class="n">03</span><h2>Architecture</h2></div>
+  <div class="col lead"><p>A Warm Electronics Box: black-coated skin, 75 mm of silica aerogel, and inside it the payload, battery, avionics and a phase-change heat sink. Two redundant heater strings are switched by software, or by mechanical thermostats if the software is down, each behind an over-temperature cutoff.</p></div>
+  <figure>
+    <img src="figures/thermal_architecture.png" alt="Cross-section of the Warm Electronics Box with heat-flow arrows (solar in 90 W, IR out 64 W, convection 33 W, 7 W through aerogel, 1 W leaks), the heater power chain from solar array through an over-temperature cutoff to software or thermostat switching, and the mode sequence standby, warm-up, science, survival, safe hold." width="1600" height="1107" loading="lazy">
+    <figcaption>Heat flows in cold standby. Orange is heat in, blue is heat out, green is electrical power. Polar summer has no night, so the modes follow the science schedule and faults.</figcaption>
+  </figure>
+  <div class="pair">
+    <figure>
+      <img src="figures/sysml_thermal_modes.png" alt="SysML v2 state machine: standby, warm-up, science, survival and safe hold with their transitions." loading="lazy">
+      <figcaption>SysML v2 state machine, generated from the model's text by the OMG pilot implementation.</figcaption>
+    </figure>
+    <figure>
+      <img src="figures/sysml_rover_context.png" alt="SysML v2 interconnection view: the thermal subsystem connected to payload, battery, chassis, power and avionics." loading="lazy">
+      <figcaption>SysML v2 interconnection view: thermal, power, command and telemetry interfaces.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="step"><span class="n">04</span><h2>Trade studies</h2></div>
+  <div class="col lead"><p>Every option ran through the same model, so each decision rests on a number rather than a pros-and-cons list.</p></div>
+  <div class="trades">
+    <div class="trade"><span class="eyebrow">T1 · insulation</span><span class="pick">75 mm silica aerogel</span><p>MLI loses at every thickness: in 5–8 torr of CO₂, gas conducts between its layers. Aerogel's optimum is 50 mm, but 75 mm costs only 0.04 kg more and buys survival margin.</p></div>
+    <div class="trade"><span class="eyebrow">T2 · coating</span><span class="pick">Keep the 2023 black paint</span><p>The box always loses heat, so absorbing sunlight is free. Black uses 4× less heater energy than white in the hot case and doesn't depend on staying dust-free.</p></div>
+    <div class="trade"><span class="eyebrow">T3 · scan heat</span><span class="pick">1.0 kg n-octadecane PCM</span><p>Without it a 2 h scan reaches 321 K. The wax melts at 301.1 K, inside the band, and holds the payload there with 25 % margin.</p></div>
+    <div class="trade"><span class="eyebrow">T4 · passive vs active</span><span class="pick">Passive-first, heaters for the rest</span><p>Eight radioisotope heater units would overheat the box at 318 K. Heaters alone close the power budget; four RHUs stay as a fallback.</p></div>
+  </div>
+  <div class="pair">
+    <figure>
+      <img src="figures/fig2_trade_insulation.png" alt="Line chart of insulation plus equivalent array mass against thickness: aerogel minimum about 2.5 kg at 50–75 mm, MLI higher at every thickness." loading="lazy">
+      <figcaption>Insulation mass plus the array mass needed to power the heaters.</figcaption>
+    </figure>
+    <figure>
+      <img src="figures/fig3_trade_pcm.png" alt="Line chart of peak payload temperature against scan duration for PCM masses 0–2 kg; 1.0 kg stays at 301.1 K up to 2 h." loading="lazy">
+      <figcaption>Peak payload temperature vs scan length for five PCM masses.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="step"><span class="n">05</span><h2>Simulation</h2></div>
+  <div class="col lead"><p>A two-node transient model in MATLAB: an interior node whose enthalpy formulation captures the wax melting, and a skin node. It runs with a thermostat-style heater controller. The biggest saving it found was operational: warming the payload only before the 18 science sols instead of all 90.</p></div>
+  <figure>
+    <img src="figures/fig1_cold_science_sol.png" alt="Temperature and power over one cold science sol: payload held near 266 K overnight, warmed from 07:00 to 296 K by the 13:00 scan, then held at 301 K by PCM melting." loading="lazy">
+    <figcaption>A cold science sol: survival heating overnight, a 6 h warm-up, then the 38 W scan absorbed by the PCM at 301.1 K.</figcaption>
+  </figure>
+  <div class="keys">
+    <div class="key"><span class="v mono cold">−36 to −75 %</span><span class="k">mission heater energy, warming only for science</span></div>
+    <div class="key"><span class="v mono">16.8 h</span><span class="k">survival with no solar input, 150 Wh battery</span></div>
+    <div class="key"><span class="v mono">24 %</span><span class="k">heater duty cycle, cold case</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="step"><span class="n">06</span><h2>Verification, tests and failures</h2></div>
+  <div class="col lead"><p>No hardware was built, so the model is <b>verified, not validated</b>. Seven automated checks show it solves its equations correctly: it matches the hand calculation to 10⁻⁷ K, conserves energy, converges in time step, gets the sun geometry right, melts the PCM on schedule and reproduces the 2023 inputs. Proving it matches reality takes the chamber test below.</p></div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Proposed test</th><th>Setup</th><th>Pass criterion</th></tr></thead>
+      <tbody>
+        <tr><td>Survival thermal balance</td><td>CO₂ at 600–1000 Pa (not hard vacuum, because gas changes insulation), walls 184 K, software off</td><td>Interior ≥ 263.15 K; model conductances within 20 %</td></tr>
+        <tr><td>Thermal cycling</td><td>Heaters, thermostats, cutoffs, PCM, aerogel; 184–303 K</td><td>No damage, set-point drift &lt; 1 K</td></tr>
+        <tr><td>Aerogel conductivity in CO₂</td><td>Guarded hot plate at 5–8 torr</td><td>k ≤ 0.012 W/m·K</td></tr>
+        <tr><td>Heater failure</td><td>One string off at 90 % voltage; one string forced ON</td><td>≥ 293.15 K at scan start; cutoff holds ≤ 313.15 K</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Failure analysis changed the design</h3>
+  <div class="col"><p>Every nominal case passed. The failure cases did not, and fixing them is the part of this project I would point to first.</p></div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Scenario</th><th>Found</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td>One heater string lost, the other at low bus voltage</td><td>Payload only 290.7 K at scan start</td><td><span class="pill fix">warm-up 5 h → 6 h</span> now 295.6 K</td></tr>
+        <tr><td>Survival set point on the survival limit</td><td>Box dipped below 263.15 K every cycle</td><td><span class="pill fix">set point → 265 K</span></td></tr>
+        <tr><td>Heater stuck ON</td><td class="heat">Payload reached 423 K</td><td><span class="pill fix">308 K series cutoff</span> peak 308.2 K</td></tr>
+        <tr><td>All heater power lost (cold soak)</td><td>Battery limit reached in 4.9 h</td><td><span class="pill fix">new TCS-12</span> switch within 4 h</td></tr>
+        <tr><td>Dust storm, heaters limited to 10 W</td><td class="ok">Holds 263.7 K</td><td>no change</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="step"><span class="n">07</span><h2>Risks</h2></div>
+  <div class="risk">
+    <div>
+      <div class="matrix" role="img" aria-label="5 by 5 risk matrix. R1 at likelihood 3 consequence 4; R3 at likelihood 2 consequence 5; R4 and R6 at 2,4; R2, R5 and R7 at 3,3; R8 at 2,1.">
+        <span class="ax">5</span><span class="c lo"></span><span class="c md"><b>R3</b></span><span class="c hi"></span><span class="c hi"></span><span class="c hi"></span>
+        <span class="ax">4</span><span class="c lo"></span><span class="c md"><b>R4</b> <b>R6</b></span><span class="c hi"><b>R1</b></span><span class="c hi"></span><span class="c hi"></span>
+        <span class="ax">3</span><span class="c lo"></span><span class="c md"></span><span class="c md"><b>R2</b> <b>R5</b> <b>R7</b></span><span class="c hi"></span><span class="c hi"></span>
+        <span class="ax">2</span><span class="c lo"></span><span class="c lo"></span><span class="c md"></span><span class="c md"></span><span class="c md"></span>
+        <span class="ax">1</span><span class="c lo"></span><span class="c lo"><b>R8</b></span><span class="c lo"></span><span class="c lo"></span><span class="c lo"></span>
+        <span class="ax"></span><span class="ax">1</span><span class="ax">2</span><span class="ax">3</span><span class="ax">4</span><span class="ax">5</span>
+      </div>
+      <p class="mx-cap">Consequence (up) by likelihood (across), 1–5. Score ≥ 12 high, 6–11 medium.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>ID</th><th>Risk</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">R1</td><td>Aerogel conducts more in CO₂: at k = 0.015, 258 Wh/sol</td><td>Measure k first; 100 mm plus RHUs</td></tr>
+          <tr><td class="mono">R3</td><td>Total heater loss: cold soak to battery limit in 4.9 h</td><td>Redundant strings; switch within 4 h</td></tr>
+          <tr><td class="mono">R4</td><td>Heater stuck ON</td><td>308 K series cutoff</td></tr>
+          <tr><td class="mono">R5</td><td>Low power in a dust storm</td><td>Survival mode; holds on 10 W</td></tr>
+          <tr><td class="mono">R2</td><td>Polar cap colder than the Phoenix data: 225 Wh/sol</td><td>Larger power allocation; RHU fallback</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="step"><span class="n">08</span><h2>What I learned</h2></div>
+  <ol class="lessons col">
+    <li><b>Close the energy balance before designing anything.</b> The 2023 numbers never balanced, so no heater size could have been right.</li>
+    <li><b>Model the real environment.</b> Mars has an atmosphere: it warms the sky, adds convection and degrades MLI. Habits from vacuum gave the wrong answers.</li>
+    <li><b>Question how a requirement is read.</b> "Operating temperature" read as "always" cost 36–75 % more energy than "while operating."</li>
+    <li><b>Run the failure cases.</b> Every nominal case passed; the failure cases found three design gaps.</li>
+    <li><b>Keep verification and validation separate.</b> A model that solves its equations correctly isn't proven right until it meets test data.</li>
+  </ol>
+</section>
+
+<footer>
+  <p>Code, SysML v2 model and full design document: <a href="https://github.com/wendymorara/lspace-thermal">github.com/wendymorara/lspace-thermal</a></p>
+  <p>Environment data: NASA Phoenix MET; Popok, TFAWS 2024; Appelbaum &amp; Flood, NASA TM-102299; aerogel and PCM properties cited in the design document.</p>
+  <p>Wendy Morara · Aerospace Engineering, Arizona State University</p>
+</footer>
+
+</div>

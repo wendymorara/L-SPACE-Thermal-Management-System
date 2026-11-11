@@ -1,0 +1,4 @@
+approach,rhu_W,mission_kWh_hot,mission_kWh_cold,hot_standby_Tmax_K
+"Heaters only",0,2.5905,15.8565,270.827
+"Heaters + 4 x 1 W RHU",4,0,7.317,292.597
+"Heaters + 8 x 1 W RHU",8,0,0.46725,317.573

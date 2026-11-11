@@ -1,0 +1,8 @@
+id,check,value,tolerance,unit,result
+"V1","Transient -> algebraic steady state",3.62573e-07,0.05,"K","PASS"
+"V2","Interior energy balance residual",1.25987e-15,0.001,"-","PASS"
+"V3a","dt 10 s vs 5 s: temperature extremes",0.00369203,0.2,"K","PASS"
+"V3b","dt 10 s vs 5 s: heater energy",0.000235183,0.02,"-","PASS"
+"V4","Max solar elevation, Ls 90, 85 N",7.10543e-15,0.01,"deg","PASS"
+"V5","PCM plateau duration vs m*L/Q",1.08497e-05,0.01,"-","PASS"
+"V6","PDR Q_solar recomputed (PDR printed 572.3 W)",0,0.1,"W","PASS"

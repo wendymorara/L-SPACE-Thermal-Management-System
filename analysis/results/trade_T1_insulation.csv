@@ -1,0 +1,15 @@
+material,thickness_mm,heater_avg_W,heater_Wh_per_sol,insulation_kg,equivalent_kg
+"Silica aerogel",10,33.7933,833.333,0.11142,6.5335
+"Silica aerogel",20,19.2734,475.278,0.23616,3.89889
+"Silica aerogel",30,13.9792,344.722,0.37494,3.03154
+"Silica aerogel",50,9.41707,232.222,0.6975,2.48712
+"Silica aerogel",75,7.02901,173.333,1.1925,2.52829
+"Silica aerogel",100,5.8575,144.444,1.8,2.91316
+"Silica aerogel",125,5.27175,130,2.53125,3.53309
+"MLI in Mars CO2",10,47.4683,1170.56,0.29712,9.318
+"MLI in Mars CO2",20,27.8907,687.778,0.62976,5.93012
+"MLI in Mars CO2",30,20.3661,502.222,0.99984,4.87021
+"MLI in Mars CO2",50,13.9003,342.778,1.86,4.50162
+"MLI in Mars CO2",75,10.4309,257.222,3.18,5.16228
+"MLI in Mars CO2",100,8.70741,214.722,4.8,6.45476
+"MLI in Mars CO2",125,7.76119,191.389,6.75,8.22494
